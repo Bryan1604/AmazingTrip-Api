@@ -325,12 +325,19 @@ class AddressController extends Controller
 
     // danh sách tất cả address đã theo dõi ( sắp xếp theo thời gian)
     public function ListAddressBookmarked($id_user){
+        $address = Address::join('bookmark','address.address_id','=','bookmark.address_id')
+        ->select('address.*')
+        ->where('bookmark.id_user','=',$id_user)
+        ->where('bookmark.status','=',1)
+        ->orderBy('created_at','desc')->get();
+        /*
         $address= DB::table('address')
                 ->join('bookmark','address.address_id','=','bookmark.address_id')
                 ->select('address.*')
                 ->where('bookmark.id_user','=',$id_user)
                 ->where('bookmark.status','=',1)
                 ->orderBy('created_at','desc')->get();
+                */
         $count = Bookmark::where('id_user',$id_user)->count();
         if($address){
             return response()->json([
